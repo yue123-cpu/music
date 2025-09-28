@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+          xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="internalOnly"
+          android:versionCode="1"
+          android:versionName="1.0">
+
+    <!-- 1. 权限声明（必须放在 <application> 外部） -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" /> <!-- API 31+ 必需 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/> <!-- 控制音频设置必需 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
+
+    <!-- 2. 其他声明（保持不变） -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
+    <!-- 3. 应用节点（子节点必须正确嵌套，与属性分开） -->
+    <application 
+        android:label="@string/app_name"
+        android:icon="@drawable/icon"
+        android:hardwareAccelerated="true"
+        android:extractNativeLibs="true"
+        android:name="com.epicgames.unreal.GameApplication"
+        android:requestLegacyExternalStorage="true"
+        android:hasCode="true">
+
+        <!-- 后台音乐核心配置：前台服务 + 后台音频标记 -->
+        <service 
+            android:name="com.epicgames.ue4.GameService" 
+            android:foregroundServiceType="mediaPlayback" /> <!-- 媒体播放类型前台服务 -->
+        <meta-data 
+            android:name="com.epicgames.ue4.BackgroundAudio" 
+            android:value="true" /> <!-- UE后台音频开关 -->
+
+        <!-- 以下内容保持不变 -->
+        <activity android:name="com.epicgames.unreal.SplashActivity"
+                  android:exported="true"
+                  android:label="@string/app_name"
+                  android:theme="@style/UnrealSplashTheme"
+                  android:launchMode="singleTask"
+                  android:resizeableActivity="false"
+                  android:screenOrientation="sensorLandscape"
+                  android:debuggable="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.epicgames.unreal.GameActivity"
+                  android:exported="true"
+                  android:label="@string/app_name"
+                  android:theme="@style/UnrealSplashTheme"
+                  android:configChanges="mcc|mnc|uiMode|density|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard|navigation|touchscreen|locale|fontScale|layoutDirection"
+                  android:resizeableActivity="false"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="sensorLandscape"
+                  android:debuggable="true">
+            <meta-data android:name="android.app.lib_name" android:value="Unreal"/>
+        </activity>
+        <activity android:name=".DownloaderActivity"
+                  android:screenOrientation="sensorLandscape"
+                  android:configChanges="mcc|mnc|uiMode|density|screenSize|orientation|keyboardHidden|keyboard"
+                  android:theme="@style/UnrealSplashTheme" />
+        
+        <!-- 其他meta-data、service、receiver节点保持不变 -->
+        <meta-data android:name="com.epicgames.unreal.GameActivity.EngineVersion" android:value="5.4.4"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.EngineBranch" android:value="++UE5+Release-5.4"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.ProjectVersion" android:value="1.0.0.0"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.DepthBufferPreference" android:value="0"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bPackageDataInsideApk" android:value="true"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bVerifyOBBOnStartUp" android:value="false"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bShouldHideUI" android:value="true"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.ProjectName" android:value="music"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.AppType" android:value=""/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bHasOBBFiles" android:value="true"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.BuildConfiguration" android:value="Shipping"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.CookedFlavors" android:value="ASTC"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bValidateTextureFormats" android:value="true"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bUseExternalFilesDir" android:value="false"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bPublicLogFiles" android:value="false"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bUseDisplayCutout" android:value="false"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bAllowIMU" android:value="false"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.bSupportsVulkan" android:value="true"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.PropagateAlpha" android:value="0"/>
+        <meta-data android:name="com.epicgames.unreal.GameActivity.StartupPermissions" android:value="android.permission.WRITE_EXTERNAL_STORAGE"/>
+        <meta-data android:name="android.supports_size_changes" android:value="false"/>
+        <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id" />
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        
+        <activity android:name="com.google.android.gms.ads.AdActivity"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        
+        <service android:name="com.epicgames.unreal.psoservices.OGLProgramService" android:process=":psoprogramservice" />
+        <service android:name="com.epicgames.unreal.psoservices.OGLProgramService1" android:process=":psoprogramservice1" />
+        <service android:name="com.epicgames.unreal.psoservices.OGLProgramService2" android:process=":psoprogramservice2" />
+        <service android:name="com.epicgames.unreal.psoservices.OGLProgramService3" android:process=":psoprogramservice3" />
+        <service android:name="com.epicgames.unreal.psoservices.OGLProgramService4" android:process=":psoprogramservice4" />
+        <service android:name="com.epicgames.unreal.psoservices.OGLProgramService5" android:process=":psoprogramservice5" />
+        <service android:name="com.epicgames.unreal.psoservices.OGLProgramService6" android:process=":psoprogramservice6" />
+        <service android:name="com.epicgames.unreal.psoservices.OGLProgramService7" android:process=":psoprogramservice7" />
+        <service android:name="com.epicgames.unreal.psoservices.VulkanProgramService" android:process=":psoprogramservice" />
+        <service android:name="com.epicgames.unreal.psoservices.VulkanProgramService1" android:process=":psoprogramservice1" />
+        <service android:name="com.epicgames.unreal.psoservices.VulkanProgramService2" android:process=":psoprogramservice2" />
+        <service android:name="com.epicgames.unreal.psoservices.VulkanProgramService3" android:process=":psoprogramservice3" />
+        <service android:name="com.epicgames.unreal.psoservices.VulkanProgramService4" android:process=":psoprogramservice4" />
+        <service android:name="com.epicgames.unreal.psoservices.VulkanProgramService5" android:process=":psoprogramservice5" />
+        <service android:name="com.epicgames.unreal.psoservices.VulkanProgramService6" android:process=":psoprogramservice6" />
+        <service android:name="com.epicgames.unreal.psoservices.VulkanProgramService7" android:process=":psoprogramservice7" />
+        <service android:name="OBBDownloaderService" />
+        
+        <receiver android:name="AlarmReceiver" android:exported="false"/>
+        <receiver android:name="com.epicgames.unreal.LocalNotificationReceiver" android:exported="false"/>
+        <receiver android:name="com.epicgames.unreal.CellularReceiver" android:exported="false"/>
+        <receiver android:name="com.epicgames.unreal.MulticastBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        
+        <meta-data android:name="android.max_aspect" android:value="2.10" />
+    </application>
+
+    <!-- 硬件特性声明（保持不变） -->
+    <uses-feature android:glEsVersion="0x00030002" android:required="true" />
+    <supports-gl-texture android:name="GL_KHR_texture_compression_astc_ldr" />
+</manifest>
