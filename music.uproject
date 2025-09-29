@@ -14,6 +14,13 @@
 		{
 			"Name": "AndroidPermissions",
 			"Enabled": false
+		},
+		{
+			"Name": "AndroidBackgroundService",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Android"
+			]
 		}
 	]
 }
